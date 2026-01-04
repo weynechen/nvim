@@ -102,6 +102,14 @@ return {
     config = true,
   },
 
+  -- Trouble (diagnostics, todos, quickfix in a nice UI)
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Trouble",
+    opts = {},
+  },
+
   -- Surround
   {
     "kylechui/nvim-surround",

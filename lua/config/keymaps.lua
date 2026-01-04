@@ -135,6 +135,15 @@ map("n", "<leader>cww", ":GcalWeekWork<CR>", { desc = "Work - week" })
 map("n", "<leader>cpt", ":GcalTodayPersonal<CR>", { desc = "Personal - today" })
 map("n", "<leader>cpw", ":GcalWeekPersonal<CR>", { desc = "Personal - week" })
 
+-- === TROUBLE / DIAGNOSTICS (Leader+x) ===
+map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (workspace)" })
+map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Diagnostics (buffer)" })
+map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", { desc = "Todos (workspace)" })
+map("n", "<leader>xT", "<cmd>Trouble todo toggle filter.buf=0<cr>", { desc = "Todos (buffer)" })
+map("n", "<leader>xs", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Symbols" })
+map("n", "<leader>xl", "<cmd>Trouble loclist toggle<cr>", { desc = "Location list" })
+map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix list" })
+
 -- === WHICH-KEY GROUPS ===
 -- These will show up nicely in which-key
 map("n", "<leader>f", "", { desc = "+find" })
@@ -142,4 +151,5 @@ map("n", "<leader>o", "", { desc = "+obsidian" })
 map("n", "<leader>c", "", { desc = "+calendar" })
 map("n", "<leader>g", "", { desc = "+git" })
 map("n", "<leader>t", "", { desc = "+todo" })
+map("n", "<leader>x", "", { desc = "+trouble" })
 map("n", "<leader>D", "", { desc = "+distant" })
