@@ -1,3 +1,4 @@
+-- my proxy config , if you are not use a proxy ,should remove it.
 vim.fn.system({ "git", "config", "--global", "http.proxy", "socks5://127.0.0.1:10803" })
 vim.fn.system({ "git", "config", "--global", "https.proxy", "socks5://127.0.0.1:10803" })
 

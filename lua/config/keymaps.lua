@@ -125,17 +125,7 @@ map("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
 map("n", "n", "nzzzv", { desc = "Next match (centered)" })
 map("n", "N", "Nzzzv", { desc = "Prev match (centered)" })
 
--- === GOOGLE CALENDAR (Leader+c) ===
-map("n", "<leader>ct", ":GcalToday<CR>", { desc = "Today's events" })
-map("n", "<leader>cw", ":GcalWeek<CR>", { desc = "This week" })
-map("n", "<leader>ca", ":GcalAdd<CR>", { desc = "Add event" })
-map("n", "<leader>cs", ":GcalSyncTask<CR>", { desc = "Sync task to calendar" })
-map("n", "<leader>cwt", ":GcalTodayWork<CR>", { desc = "Work - today" })
-map("n", "<leader>cww", ":GcalWeekWork<CR>", { desc = "Work - week" })
-map("n", "<leader>cpt", ":GcalTodayPersonal<CR>", { desc = "Personal - today" })
-map("n", "<leader>cpw", ":GcalWeekPersonal<CR>", { desc = "Personal - week" })
 
--- === TROUBLE / DIAGNOSTICS (Leader+x) ===
 map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (workspace)" })
 map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Diagnostics (buffer)" })
 map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", { desc = "Todos (workspace)" })
@@ -148,7 +138,6 @@ map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix list
 -- These will show up nicely in which-key
 map("n", "<leader>f", "", { desc = "+find" })
 map("n", "<leader>o", "", { desc = "+obsidian" })
-map("n", "<leader>c", "", { desc = "+calendar" })
 map("n", "<leader>g", "", { desc = "+git" })
 map("n", "<leader>t", "", { desc = "+todo" })
 map("n", "<leader>x", "", { desc = "+trouble" })
