@@ -27,7 +27,7 @@ return {
         ensure_installed = {
           "lua_ls",
           "ts_ls",
-          "gopls",
+          -- "gopls",
           "clangd",
           "pyright",
           "jsonls",
@@ -88,7 +88,20 @@ return {
             },
           },
         },
-        pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              pythonPath = function()
+                local cwd = vim.fn.getcwd()
+                local venv_path = cwd .. "/.venv/bin/python"
+                if vim.fn.executable(venv_path) == 1 then
+                  return venv_path
+                end
+                return "python"
+              end,
+            },
+          },
+        },
         jsonls = {},
         yamlls = {},
         html = {},
@@ -104,15 +117,15 @@ return {
             "--completion-style=detailed",
           },
         },
-        gopls = {
-          settings = {
-            gopls = {
-              analyses = { unusedparams = true },
-              staticcheck = true,
-              gofumpt = true,
-            },
-          },
-        },
+        -- gopls = {
+        --   settings = {
+        --     gopls = {
+        --       analyses = { unusedparams = true },
+        --       staticcheck = true,
+        --       gofumpt = true,
+        --     },
+        --   },
+        -- },
       }
 
       for server, config in pairs(servers) do
@@ -151,8 +164,8 @@ return {
         sources = {
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.gofumpt,
-          null_ls.builtins.formatting.goimports,
+          -- null_ls.builtins.formatting.gofumpt,
+          -- null_ls.builtins.formatting.goimports,
           null_ls.builtins.formatting.clang_format,
         },
       })
