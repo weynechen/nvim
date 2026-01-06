@@ -320,17 +320,18 @@ return {
     },
   },
 
-  -- Tiny glimmer: Yank/paste animations
-  {
-    "rachartier/tiny-glimmer.nvim",
-    event = "VeryLazy",
-    opts = {
-      enabled = true,
-      timeout = 300,
-      default_animation = "fade",
-      animations = {
-        fade = { duration = 300 },
-      },
-    },
-  },
+   -- Tiny glimmer: Yank/paste animations
+   {
+     "rachartier/tiny-glimmer.nvim",
+     enabled = false, -- 与neo-tree有兼容性问题
+     event = "VeryLazy",
+     opts = {
+       enabled = true,
+       timeout = 300,
+       default_animation = "fade",
+       animations = {
+         fade = { duration = 300 },
+       },
+     },
+   },
 }

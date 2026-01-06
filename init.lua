@@ -1,3 +1,6 @@
+vim.fn.system({ "git", "config", "--global", "http.proxy", "socks5://127.0.0.1:10803" })
+vim.fn.system({ "git", "config", "--global", "https.proxy", "socks5://127.0.0.1:10803" })
+
 -- Azzie's Neovim Config
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

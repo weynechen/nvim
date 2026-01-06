@@ -1,7 +1,7 @@
 -- Telescope - Fuzzy finder (like Ctrl+P in VS Code)
 return {
   "nvim-telescope/telescope.nvim",
-  branch = "0.1.x",
+  branch = "main",
   dependencies = {
     "nvim-lua/plenary.nvim",
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -23,6 +23,10 @@ return {
           },
         },
         file_ignore_patterns = { "node_modules", ".git/", ".obsidian/" },
+        -- 禁用treesitter预览以避免兼容性问题
+        preview = {
+          treesitter = false,
+        },
       },
       pickers = {
         find_files = { hidden = true },
