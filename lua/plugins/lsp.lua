@@ -91,14 +91,18 @@ return {
         pyright = {
           settings = {
             python = {
-              pythonPath = function()
+              -- pythonPath is computed at config time, not as a function
+              pythonPath = (function()
                 local cwd = vim.fn.getcwd()
-                local venv_path = cwd .. "/.venv/bin/python"
-                if vim.fn.executable(venv_path) == 1 then
-                  return venv_path
+                -- Windows uses Scripts/python.exe, Unix uses bin/python
+                local venv_python = vim.fn.has("win32") == 1
+                  and cwd .. "/.venv/Scripts/python.exe"
+                  or cwd .. "/.venv/bin/python"
+                if vim.fn.executable(venv_python) == 1 then
+                  return venv_python
                 end
-                return "python"
-              end,
+                return vim.fn.exepath("python") or "python"
+              end)(),
             },
           },
         },
