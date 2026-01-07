@@ -1,13 +1,19 @@
 -- Obsidian.nvim - Vault integration
+
+-- Only load if vault directory exists
+local vault_path = vim.fn.expand("~/vault")
+local vault_exists = vim.fn.isdirectory(vault_path) == 1
+
 return {
   "obsidian-nvim/obsidian.nvim",
   version = "*",
   lazy = true,
+  cond = vault_exists, -- Disable plugin if vault doesn't exist
   ft = "markdown",
-  event = {
-    "BufReadPre " .. vim.fn.expand("~") .. "/vault/**.md",
-    "BufNewFile " .. vim.fn.expand("~") .. "/vault/**.md",
-  },
+  event = vault_exists and {
+    "BufReadPre " .. vault_path .. "/**.md",
+    "BufNewFile " .. vault_path .. "/**.md",
+  } or {},
   dependencies = {
     "nvim-lua/plenary.nvim",
     "hrsh7th/nvim-cmp",
