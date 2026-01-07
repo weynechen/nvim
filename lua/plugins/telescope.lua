@@ -1,10 +1,25 @@
 -- Telescope - Fuzzy finder (like Ctrl+P in VS Code)
+
+-- Cross-platform build command for fzf-native
+local function fzf_native_build()
+  if vim.fn.has("win32") == 1 then
+    -- Windows: use cmake, then copy DLL to expected location
+    return "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && copy build\\Release\\libfzf.dll build\\"
+  else
+    -- Linux/macOS: use make
+    return "make"
+  end
+end
+
 return {
   "nvim-telescope/telescope.nvim",
   branch = "master",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    {
+      "nvim-telescope/telescope-fzf-native.nvim",
+      build = fzf_native_build(),
+    },
   },
   config = function()
     local telescope = require("telescope")
