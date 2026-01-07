@@ -44,7 +44,13 @@ return {
         },
       },
       pickers = {
-        find_files = { hidden = true },
+        find_files = {
+          -- Only use hidden on non-Windows or when fd is available
+          hidden = vim.fn.has("win32") == 0 or vim.fn.executable("fd") == 1,
+          find_command = vim.fn.executable("fd") == 1
+            and { "fd", "--type", "f", "--hidden", "--exclude", ".git" }
+            or nil,
+        },
       },
     })
     telescope.load_extension("fzf")
