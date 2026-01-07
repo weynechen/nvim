@@ -1,7 +1,7 @@
 -- Telescope - Fuzzy finder (like Ctrl+P in VS Code)
 return {
   "nvim-telescope/telescope.nvim",
-  branch = "main",
+  branch = "master",
   dependencies = {
     "nvim-lua/plenary.nvim",
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
