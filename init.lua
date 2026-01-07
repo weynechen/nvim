@@ -1,8 +1,8 @@
--- my proxy config , if you are not use a proxy ,should remove it.
-vim.fn.system({ "git", "config", "--global", "http.proxy", "socks5://127.0.0.1:10803" })
-vim.fn.system({ "git", "config", "--global", "https.proxy", "socks5://127.0.0.1:10803" })
-
 -- Azzie's Neovim Config
+
+-- Load local config if exists (for user-specific settings like proxy)
+-- Create lua/config/local.lua for your own settings (git ignored)
+pcall(require, "config.local")
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -25,4 +25,12 @@ require("config.keymaps")
 -- Load plugins
 require("lazy").setup("plugins", {
   change_detection = { notify = false },
+  -- concurrency = 4, -- Limit concurrent git operations to avoid rate limiting
+  -- git = {
+  --   throttle = {
+  --     enabled = true,
+  --     rate = 2,    -- Max 2 operations
+  --     duration = 1000, -- Per 1000ms
+  --   },
+  -- },
 })

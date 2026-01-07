@@ -1,0 +1,13 @@
+-- Local configuration example (copy to local.lua and modify)
+-- This file is git ignored, so your personal settings won't affect others
+
+-- Proxy settings (only affects nvim process, not global git config)
+-- Uncomment and modify if you need proxy to access GitHub
+-- vim.env.http_proxy = "socks5://127.0.0.1:10803"
+-- vim.env.https_proxy = "socks5://127.0.0.1:10803"
+-- vim.env.ALL_PROXY = "socks5://127.0.0.1:10803"
+
+-- Or use http proxy
+-- vim.env.http_proxy = "http://127.0.0.1:7890"
+-- vim.env.https_proxy = "http://127.0.0.1:7890"
+
