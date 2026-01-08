@@ -173,7 +173,7 @@ return {
         "      |\\      _,,,---,,_            ",
         "ZZZzz /,`.-'`'    -.  ;-;;,_        ",
         "     |,4-  ) )-,_. ,\\ (  `'-'       ",
-        "    '---''(_/--'  `-'\\_)  Felix Lee ",
+        "    '---''(_/--'  `-'\\_)  Weyne Chen ",
         "",
       }
 
@@ -285,6 +285,7 @@ return {
   -- Drop: Screensaver with falling characters
   {
     "folke/drop.nvim",
+    enabled = false, -- Disabled falling animation
     event = "VimEnter",
     opts = {
       theme = "stars",
