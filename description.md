@@ -495,6 +495,83 @@ bash install.sh
 
 ---
 
+## AI 配置
+
+### 支持的 Provider
+
+本配置支持多种 AI provider，通过环境变量配置：
+
+| Provider | API Key 环境变量 | 默认模型 |
+|----------|------------------|----------|
+| **Claude (Anthropic)** | `ANTHROPIC_API_KEY` | claude-sonnet-4-20250514 |
+| **OpenAI** | `OPENAI_API_KEY` | gpt-4o |
+| **Mistral** | `MISTRAL_API_KEY` | mistral-large-latest |
+| **Gemini** | `GEMINI_API_KEY` | gemini-pro |
+| **DeepSeek** | `DEEPSEEK_API_KEY` | deepseek-chat |
+| **Groq** | `GROQ_API_KEY` | llama-3.3-70b-specdec |
+| **Ollama (本地)** | `OLLAMA_BASE_URL` | localhost:11434 |
+
+### 配置方法
+
+创建 `lua/config/local.lua` 文件（git 忽略），添加 API 密钥：
+
+```lua
+-- Claude (当前默认)
+vim.env.ANTHROPIC_API_KEY = "sk-ant-api03-xxx"
+
+-- 或切换到 OpenAI
+-- vim.env.OPENAI_API_KEY = "sk-xxx"
+```
+
+### 修改 Provider
+
+编辑 `lua/plugins/ai.lua` 切换 provider：
+
+```lua
+opts = {
+  provider = "claude",  -- 可选: "claude", "openai", "mistral"
+  providers = {
+    claude = {
+      endpoint = "https://api.anthropic.com",
+      model = "claude-sonnet-4-20250514",
+    },
+    openai = {
+      endpoint = "https://api.openai.com/v1",
+      model = "gpt-4o",
+    },
+  },
+}
+```
+
+### 本地 Ollama 配置
+
+```lua
+vim.env.OLLAMA_BASE_URL = "http://localhost:11434"
+```
+
+```lua
+opts = {
+  provider = "ollama",
+  providers = {
+    ollama = {
+      endpoint = "http://localhost:11434/v1",
+      model = "llama3",
+    },
+  },
+}
+```
+
+### 常见问题
+
+**403 Forbidden**: 检查 API Key 是否正确设置，确保 Key 有效且未过期。
+
+**连接超时**: 可能需要配置代理，在 `lua/config/local.lua` 中添加：
+```lua
+vim.env.https_proxy = "socks5://127.0.0.1:10803"
+```
+
+---
+
 **配置维护者**: Azzie
 **最后更新**: 2025
 **Neovim 版本要求**: 0.11+
