@@ -53,9 +53,29 @@ return {
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+      -- Detect and set .venv for pyright
+      local function get_python_path()
+        local cwd = vim.fn.getcwd()
+        local venv_path = cwd .. "/.venv/bin/python"
+        if vim.fn.executable(venv_path) == 1 then
+          return venv_path
+        end
+        return "python"
+      end
+
       -- LSP keymaps on attach
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+          -- Set Python path for pyright
+          if client and client.name == "pyright" then
+            client.config.settings = client.config.settings or {}
+            client.config.settings.python = client.config.settings.python or {}
+            client.config.settings.python.pythonPath = get_python_path()
+            client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+          end
+
           local bufnr = args.buf
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
@@ -70,6 +90,7 @@ return {
           map("i", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
           map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
+          map("n", "<leader>rp", function() vim.cmd("LspRestart pyright") end, "Restart pyright")
           map("n", "<leader>cf", function() vim.lsp.buf.format({ async = true }) end, "Format")
           map("n", "<F2>", vim.lsp.buf.rename, "Rename symbol")
           map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
