@@ -41,6 +41,16 @@ return {
             max_tokens = 4096,
           },
         },
+        qwen_coder = {
+          __inherited_from = "openai",
+          endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1",
+          model = "qwen-coder",
+          api_key_name = "DASHSCOPE_API_KEY",
+          extra_request_body = {
+            temperature = 0,
+            max_tokens = 4096,
+          },
+        },
       },
       behaviour = {
         auto_suggestions = false,

@@ -497,75 +497,78 @@ bash install.sh
 
 ## AI 配置
 
-### 支持的 Provider
+avante.nvim 支持两种方式使用 AI provider：
 
-本配置支持多种 AI provider，通过环境变量配置：
+### 1. 内置 Provider
 
-| Provider | API Key 环境变量 | 默认模型 |
-|----------|------------------|----------|
-| **Claude (Anthropic)** | `ANTHROPIC_API_KEY` | claude-sonnet-4-20250514 |
-| **OpenAI** | `OPENAI_API_KEY` | gpt-4o |
-| **Mistral** | `MISTRAL_API_KEY` | mistral-large-latest |
-| **Gemini** | `GEMINI_API_KEY` | gemini-pro |
-| **DeepSeek** | `DEEPSEEK_API_KEY` | deepseek-chat |
-| **Groq** | `GROQ_API_KEY` | llama-3.3-70b-specdec |
-| **Ollama (本地)** | `OLLAMA_BASE_URL` | localhost:11434 |
+直接设置 `provider` 字段：
 
-### 配置方法
+| Provider | 环境变量 | 说明 |
+|----------|----------|------|
+| `claude` | `ANTHROPIC_API_KEY` | Anthropic Claude (默认) |
+| `openai` | `OPENAI_API_KEY` | OpenAI 兼容接口 |
 
-创建 `lua/config/local.lua` 文件（git 忽略），添加 API 密钥：
+### 2. 自定义 Provider (vendors)
+
+通过 `vendors` 字段定义任意 OpenAI 兼容的 API：
 
 ```lua
--- Claude (当前默认)
+opts = {
+  provider = "qwen-coder",
+  vendors = {
+    qwen-coder = {
+      api_key_name = "DASHSCOPE_API_KEY",
+      endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      model = "qwen-coder",  -- 或 qwen-plus, qwen-max
+      parse_curl_args = function(opts, code_opts)
+        local headers = {
+          ["Content-Type"] = "application/json",
+          ["Authorization"] = "Bearer " .. os.getenv(opts.api_key_name),
+        }
+        local AvanteLlm = require("avante.providers")
+        return {
+          url = opts.endpoint .. "/chat/completions",
+          headers = headers,
+          body = vim.tbl_deep_extend("force", {
+            model = opts.model,
+            temperature = 0,
+            stream = true,
+            messages = AvanteLlm.openai.parse_messages(code_opts),
+          }, {}),
+        }
+      end,
+      parse_response_data = function(data_stream, event_state, opts)
+        require("avante.providers").openai.parse_response(data_stream, event_state, opts)
+      end,
+    },
+  },
+}
+```
+
+### 环境变量配置
+
+创建 `lua/config/local.lua`：
+
+```lua
+-- Claude
 vim.env.ANTHROPIC_API_KEY = "sk-ant-api03-xxx"
 
--- 或切换到 OpenAI
--- vim.env.OPENAI_API_KEY = "sk-xxx"
+-- 或 Qwen (阿里云 DashScope)
+-- vim.env.DASHSCOPE_API_KEY = "sk-xxx"
 ```
 
-### 修改 Provider
+### 切换 Provider
 
-编辑 `lua/plugins/ai.lua` 切换 provider：
-
-```lua
-opts = {
-  provider = "claude",  -- 可选: "claude", "openai", "mistral"
-  providers = {
-    claude = {
-      endpoint = "https://api.anthropic.com",
-      model = "claude-sonnet-4-20250514",
-    },
-    openai = {
-      endpoint = "https://api.openai.com/v1",
-      model = "gpt-4o",
-    },
-  },
-}
-```
-
-### 本地 Ollama 配置
-
-```lua
-vim.env.OLLAMA_BASE_URL = "http://localhost:11434"
-```
-
-```lua
-opts = {
-  provider = "ollama",
-  providers = {
-    ollama = {
-      endpoint = "http://localhost:11434/v1",
-      model = "llama3",
-    },
-  },
-}
-```
+修改 `lua/plugins/ai.lua` 中的 `provider` 值：
+- `provider = "claude"` - 使用 Claude
+- `provider = "openai"` - 使用 OpenAI
+- `provider = "qwen-coder"` - 使用自定义的 Qwen Coder
 
 ### 常见问题
 
-**403 Forbidden**: 检查 API Key 是否正确设置，确保 Key 有效且未过期。
+**403 Forbidden**: 检查 API Key 是否有效
 
-**连接超时**: 可能需要配置代理，在 `lua/config/local.lua` 中添加：
+**连接超时**: 配置代理
 ```lua
 vim.env.https_proxy = "socks5://127.0.0.1:10803"
 ```

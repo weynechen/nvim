@@ -63,6 +63,75 @@ return {
         return "python"
       end
 
+-- Clangd compile_commands.json management
+local ClangdConfig = {
+  -- User-specified directory (highest priority, once set, never auto-change)
+  custom_compile_commands_dir = nil,
+}
+
+-- Find compile_commands.json directory with priority:
+-- 1. User-specified (highest)
+-- 2. Auto-detect in root/build or root
+-- 3. Fallback to cwd
+local function get_compile_commands_dir()
+  -- Highest priority: user-specified
+  if ClangdConfig.custom_compile_commands_dir then
+    return ClangdConfig.custom_compile_commands_dir
+  end
+
+  -- Auto-detect: check cwd/build and cwd
+  local cwd = vim.fn.getcwd()
+  local candidates = { cwd .. "/build", cwd }
+  for _, dir in ipairs(candidates) do
+    if vim.loop.fs_stat(dir .. "/compile_commands.json") then
+      return dir
+    end
+  end
+
+  -- Fallback to cwd/build (common CMake output dir)
+  return cwd .. "/build"
+end
+
+-- Build clangd command with --compile-commands-dir
+local function get_clangd_cmd()
+  local compile_dir = get_compile_commands_dir()
+  return {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu",
+    "--completion-style=detailed",
+    "--compile-commands-dir=" .. compile_dir,
+  }
+end
+
+-- User command to manually set compile_commands.json directory
+vim.api.nvim_create_user_command("ClangdCompileCommandDir", function(opts)
+  local path = vim.fn.expand(opts.args)
+  -- Validate: directory exists or contains compile_commands.json
+  if vim.fn.isdirectory(path) == 1 then
+    ClangdConfig.custom_compile_commands_dir = path
+    vim.notify("Set compile_commands.json dir to: " .. path .. " (locked)", vim.log.levels.INFO)
+    -- Restart clangd with new path
+    vim.cmd("LspRestart clangd")
+  else
+    vim.notify("Invalid directory: " .. path, vim.log.levels.ERROR)
+  end
+end, {
+  nargs = 1,
+  complete = "dir",
+  desc = "Set custom compile_commands.json directory for clangd (highest priority)",
+})
+
+-- User command to clear manual setting and use auto-detect
+vim.api.nvim_create_user_command("ClangdCompileCommandDirReset", function()
+  ClangdConfig.custom_compile_commands_dir = nil
+  vim.notify("Reset to auto-detect mode", vim.log.levels.INFO)
+  vim.cmd("LspRestart clangd")
+end, {
+  desc = "Reset clangd compile_commands.json directory to auto-detect",
+})
+
       -- LSP keymaps on attach
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
@@ -134,13 +203,26 @@ return {
         tailwindcss = {},
         marksman = {},
         clangd = {
-          cmd = {
-            "clangd",
-            "--background-index",
-            "--clang-tidy",
-            "--header-insertion=iwyu",
-            "--completion-style=detailed",
-          },
+          cmd = get_clangd_cmd(),
+          -- Use project markers, fallback to cwd (stable root for external files)
+          root_dir = function(bufnr, on_dir)
+            local fname = vim.api.nvim_buf_get_name(bufnr)
+            local util = require("lspconfig.util")
+            -- Try to find project root by markers
+            local root = util.root_pattern(
+              ".clangd",
+              ".clang-tidy",
+              ".clang-format",
+              "compile_commands.json",
+              "compile_flags.txt",
+              "configure.ac",
+              ".git",
+              "CMakeLists.txt",
+              "Makefile"
+            )(fname)
+            -- Fallback to cwd for external files (e.g., library headers)
+            on_dir(root or vim.fn.getcwd())
+          end,
         },
         -- gopls = {
         --   settings = {
