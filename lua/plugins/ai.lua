@@ -12,6 +12,7 @@ return {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       "nvim-tree/nvim-web-devicons",
+      "nvim-telescope/telescope.nvim",
       {
         "HakonHarnes/img-clip.nvim",
         event = "VeryLazy",
@@ -30,16 +31,34 @@ return {
       },
     },
     opts = {
-      provider = "claude",
-      auto_suggestions_provider = "claude",
+      provider = "xiaomi",
+      auto_suggestions_provider = "xiaomi",
       providers = {
-        claude = {
-          endpoint = "https://api.anthropic.com",
-          model = "claude-sonnet-4-20250514",
-          extra_request_body = {
-            temperature = 0,
-            max_tokens = 4096,
-          },
+        -- claude = {
+        --   endpoint = "https://api.anthropic.com",
+        --   model = "claude-sonnet-4-20250514",
+        --   extra_request_body = {
+        --     temperature = 0,
+        --     max_tokens = 4096,
+        --   },
+        -- },
+        xiaomi = {
+          __inherited_from="claude",
+          endpoint = "https://api.xiaomimimo.com/anthropic",
+          model = "mimo-v2-flash",
+          api_key_name = "XIAOMI_MIMO_API_KEY",
+        },
+        zhipu= {
+          __inherited_from="claude",
+          endpoint = "https://open.bigmodel.cn/api/anthropic",
+          model = "glm-4.7",
+          api_key_name = "GLM_API_KEY",
+        },
+        kimi= {
+          __inherited_from="claude",
+          endpoint = "https://api.moonshot.cn/anthropic",
+          model = "kimi-k2-thinking-turbo",
+          api_key_name = "KIMI_API_KEY",
         },
         qwen_coder = {
           __inherited_from = "openai",
