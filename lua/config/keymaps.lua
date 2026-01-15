@@ -13,7 +13,7 @@ map("n", "<C-p>", ":Telescope find_files<CR>", { desc = "Quick open file" })
 map("n", "<C-S-p>", ":Telescope commands<CR>", { desc = "Command palette" })
 map("n", "<C-S-f>", ":Telescope live_grep<CR>", { desc = "Search in files" })
 map("n", "<C-S-e>", ":Oil<CR>", { desc = "File explorer" })
-map("n", "<C-b>", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
+-- map("n", "<C-b>", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
 map("n", "<C-`>", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
 map("t", "<C-`>", "<C-\\><C-n>:ToggleTerm<CR>", { desc = "Toggle terminal" })
 
@@ -142,3 +142,7 @@ map("n", "<leader>g", "", { desc = "+git" })
 map("n", "<leader>t", "", { desc = "+todo" })
 map("n", "<leader>x", "", { desc = "+trouble" })
 map("n", "<leader>D", "", { desc = "+distant" })
+
+-- neotree bind
+-- map("n", "<C-b>", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
+map("n", "<leader>e", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
