@@ -10,11 +10,11 @@ return {
         },
         -- Servers can be configured here if needed
         servers = {
-          ["celeste-eu-cluster"] = {
+          ["custom-server"] = {
             connect = {
               default = {
                 scheme = "ssh",
-                username = "celeste",
+                username = "custom-user",
               },
             },
           },
@@ -24,19 +24,19 @@ return {
       -- Keybindings
       local keymap = vim.keymap.set
       keymap("n", "<leader>Dc", function()
-        vim.ui.input({ prompt = "SSH address: ", default = "ssh://celeste@celeste-eu-cluster" }, function(addr)
+        vim.ui.input({ prompt = "SSH address: ", default = "ssh://custom-user@custom-server" }, function(addr)
           if addr then vim.cmd("DistantConnect " .. addr) end
         end)
       end, { desc = "Distant Connect (SSH)" })
       keymap("n", "<leader>Dl", function()
-        vim.ui.input({ prompt = "Launch address: ", default = "ssh://celeste@celeste-eu-cluster" }, function(addr)
+        vim.ui.input({ prompt = "Launch address: ", default = "ssh://custom-user@custom-server" }, function(addr)
           if addr then vim.cmd("DistantLaunch " .. addr) end
         end)
       end, { desc = "Distant Launch" })
       keymap("n", "<leader>Do", "<cmd>DistantOpen<CR>", { desc = "Distant Open" })
       keymap("n", "<leader>Ds", "<cmd>DistantShell<CR>", { desc = "Distant Shell" })
       keymap("n", "<leader>Dw", function()
-        vim.ui.input({ prompt = "Remote directory: ", default = "/home/celeste/" }, function(path)
+        vim.ui.input({ prompt = "Remote directory: ", default = "/home/custom-user/" }, function(path)
           if path then
             vim.cmd("DistantOpen " .. path)
           end

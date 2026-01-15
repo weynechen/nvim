@@ -62,25 +62,6 @@ map("n", "<C-5>", ":BufferLineGoToBuffer 5<CR>", { silent = true })
 -- === GO TO (Ctrl+G) ===
 map("n", "<C-g>", ":Telescope lsp_document_symbols<CR>", { desc = "Go to symbol" })
 
--- === OBSIDIAN / VAULT (Leader+o) ===
-map("n", "<leader>on", ":Obsidian new<CR>", { desc = "New note" })
-map("n", "<leader>oo", ":Obsidian open<CR>", { desc = "Open in Obsidian" })
-map("n", "<leader>os", ":Obsidian search<CR>", { desc = "Search notes" })
-map("n", "<leader>oq", ":Obsidian quick_switch<CR>", { desc = "Quick switch" })
-map("n", "<leader>ot", ":Obsidian today<CR>", { desc = "Today's note" })
-map("n", "<leader>oy", ":Obsidian yesterday<CR>", { desc = "Yesterday's note" })
-map("n", "<leader>ob", ":Obsidian backlinks<CR>", { desc = "Backlinks" })
-map("n", "<leader>ol", ":Obsidian links<CR>", { desc = "Links" })
-map("n", "<leader>od", ":Obsidian toggle_checkbox<CR>", { desc = "Toggle checkbox" })
-map("n", "<leader>ov", ":edit ~/vault/<CR>", { desc = "Open vault" })
-map("n", "<leader>op", ":edit ~/vault/personal/plan.md<CR>", { desc = "Personal plan" })
-map("n", "<leader>owp", ":edit ~/vault/work/plan.md<CR>", { desc = "Work plan" })
-
--- === KANBAN ===
-map("n", "<leader>ok", ":KanbanOpen<CR>", { desc = "Open Kanban" })
-map("n", "<leader>owk", ":KanbanOpen ~/vault/work/kanban.md<CR>", { desc = "Work kanban" })
-map("n", "<leader>opk", ":KanbanOpen ~/vault/personal/kanban.md<CR>", { desc = "Personal kanban" })
-
 -- === TODO STATES ===
 -- Cycle: [ ] -> [@] -> [s] -> [x] -> [ ]
 local todo_states = { "[ ]", "[@]", "[s]", "[x]" }
@@ -137,7 +118,6 @@ map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix list
 -- === WHICH-KEY GROUPS ===
 -- These will show up nicely in which-key
 map("n", "<leader>f", "", { desc = "+find" })
-map("n", "<leader>o", "", { desc = "+obsidian" })
 map("n", "<leader>g", "", { desc = "+git" })
 map("n", "<leader>t", "", { desc = "+todo" })
 map("n", "<leader>x", "", { desc = "+trouble" })
