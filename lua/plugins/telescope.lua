@@ -22,6 +22,7 @@ return {
             ["<C-j>"] = actions.move_selection_next,
             ["<C-k>"] = actions.move_selection_previous,
             ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+            ["<C-a>"] = actions.toggle_all, -- Toggle select all
             ["<Esc>"] = actions.close,
             ["<CR>"] = actions.select_default,
           },
