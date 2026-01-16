@@ -1,4 +1,30 @@
 -- LSP Configuration (nvim 0.11+)
+
+-- Monkey patch for Neovim 0.11 position_encoding compatibility
+-- This ensures plugins like Telescope work correctly with the new API requirements
+local function patch_lsp_utils()
+  local util = vim.lsp.util
+  
+  -- Wrap make_position_params to auto-inject utf-8 encoding
+  local original_make_position_params = util.make_position_params
+  util.make_position_params = function(window, offset_encoding)
+    -- If offset_encoding is not provided, default to utf-8
+    return original_make_position_params(window, offset_encoding or "utf-8")
+  end
+  
+  -- Wrap symbols_to_items to auto-inject utf-8 encoding
+  if util.symbols_to_items then
+    local original_symbols_to_items = util.symbols_to_items
+    util.symbols_to_items = function(symbols, bufnr, offset_encoding)
+      -- If offset_encoding is not provided, default to utf-8
+      return original_symbols_to_items(symbols, bufnr, offset_encoding or "utf-8")
+    end
+  end
+end
+
+-- Apply patches immediately
+patch_lsp_utils()
+
 return {
   -- Mason: Package manager for LSP servers, formatters, linters
   {
@@ -52,6 +78,9 @@ return {
     },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      
+      -- Force UTF-8 encoding for all LSP clients to avoid offset_encoding conflicts
+      capabilities.offsetEncoding = { "utf-8" }
 
       -- Detect and set .venv for pyright
       local function get_python_path()
@@ -102,6 +131,7 @@ local function get_clangd_cmd()
     "--header-insertion=iwyu",
     "--completion-style=detailed",
     "--compile-commands-dir=" .. compile_dir,
+    "--offset-encoding=utf-8",
   }
 end
 
@@ -136,6 +166,11 @@ end, {
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
+          
+          -- Force UTF-8 offset encoding for all clients
+          if client and client.offset_encoding then
+            client.offset_encoding = "utf-8"
+          end
 
           -- Set Python path for pyright
           if client and client.name == "pyright" then
@@ -237,6 +272,7 @@ end, {
 
       for server, config in pairs(servers) do
         config.capabilities = capabilities
+        config.offset_encoding = "utf-8"
         vim.lsp.config[server] = config
         vim.lsp.enable(server)
       end
@@ -264,10 +300,16 @@ end, {
   {
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "hrsh7th/cmp-nvim-lsp" },
     config = function()
       local null_ls = require("null-ls")
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      
+      -- Force UTF-8 encoding to match other LSP clients
+      capabilities.offsetEncoding = { "utf-8" }
+      
       null_ls.setup({
+        capabilities = capabilities,
         sources = {
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.stylua,
