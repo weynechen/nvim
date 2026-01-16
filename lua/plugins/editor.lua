@@ -81,7 +81,7 @@ return {
     config = function()
       require("toggleterm").setup({
         size = 15,
-        open_mapping = [[<C-`>]],
+        -- open_mapping = [[<C-`>]],
         direction = "horizontal",
         shade_terminals = true,
       })
@@ -102,7 +102,7 @@ return {
     config = true,
   },
 
-  -- Trouble (diagnostics, todos, quickfix in a nice UI)
+  -- Trouble (diagnostics, quickfix in a nice UI)
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -135,7 +135,7 @@ return {
     end,
   },
 
-  -- Better markdown with custom todo states
+  -- Better markdown rendering
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -154,20 +154,6 @@ return {
             icon = "󰄵 ",
             highlight = "RenderMarkdownChecked",
           },
-          custom = {
-            -- [@] doing/active - spinning arrow
-            doing = { raw = "[@]", rendered = "󱥸 ", highlight = "RenderMarkdownDoing" },
-            -- [s] started - play button
-            started = { raw = "[s]", rendered = "󰐊 ", highlight = "RenderMarkdownStarted" },
-            -- [d] deferred - pause
-            deferred = { raw = "[d]", rendered = "󰏤 ", highlight = "RenderMarkdownDeferred" },
-            -- [b] blocked - stop/cancel
-            blocked = { raw = "[b]", rendered = "󰜺 ", highlight = "RenderMarkdownBlocked" },
-            -- [!] priority/important - fire
-            priority = { raw = "[!]", rendered = "󰈸 ", highlight = "RenderMarkdownPriority" },
-            -- [?] question/unsure
-            question = { raw = "[?]", rendered = "󰘥 ", highlight = "RenderMarkdownQuestion" },
-          },
         },
         bullet = {
           enabled = true,
@@ -177,12 +163,6 @@ return {
       -- Set highlight colors (catppuccin mocha palette)
       vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", { fg = "#89b4fa" })  -- blue
       vim.api.nvim_set_hl(0, "RenderMarkdownChecked", { fg = "#a6e3a1" })    -- green
-      vim.api.nvim_set_hl(0, "RenderMarkdownDoing", { fg = "#fab387" })      -- peach/orange
-      vim.api.nvim_set_hl(0, "RenderMarkdownStarted", { fg = "#74c7ec" })    -- sapphire
-      vim.api.nvim_set_hl(0, "RenderMarkdownDeferred", { fg = "#6c7086" })   -- overlay0/gray
-      vim.api.nvim_set_hl(0, "RenderMarkdownBlocked", { fg = "#f38ba8" })    -- red
-      vim.api.nvim_set_hl(0, "RenderMarkdownPriority", { fg = "#f9e2af" })   -- yellow
-      vim.api.nvim_set_hl(0, "RenderMarkdownQuestion", { fg = "#cba6f7" })   -- mauve
     end,
   },
 }

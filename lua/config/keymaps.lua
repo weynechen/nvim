@@ -14,8 +14,6 @@ map("n", "<C-S-p>", ":Telescope commands<CR>", { desc = "Command palette" })
 map("n", "<C-S-f>", ":Telescope live_grep<CR>", { desc = "Search in files" })
 map("n", "<C-S-e>", ":Oil<CR>", { desc = "File explorer" })
 -- map("n", "<C-b>", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
-map("n", "<C-`>", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
-map("t", "<C-`>", "<C-\\><C-n>:ToggleTerm<CR>", { desc = "Toggle terminal" })
 
 -- === EDITOR (Ctrl+) ===
 map("n", "<C-f>", "/", { desc = "Find in file" })
@@ -62,42 +60,6 @@ map("n", "<C-5>", ":BufferLineGoToBuffer 5<CR>", { silent = true })
 -- === GO TO (Ctrl+G) ===
 map("n", "<C-g>", ":Telescope lsp_document_symbols<CR>", { desc = "Go to symbol" })
 
--- === TODO STATES ===
--- Cycle: [ ] -> [@] -> [s] -> [x] -> [ ]
-local todo_states = { "[ ]", "[@]", "[s]", "[x]" }
-local function cycle_todo()
-  local line = vim.api.nvim_get_current_line()
-  for i, state in ipairs(todo_states) do
-    if line:find(vim.pesc(state), 1, true) then
-      local next_state = todo_states[(i % #todo_states) + 1]
-      local new_line = line:gsub(vim.pesc(state), next_state, 1)
-      vim.api.nvim_set_current_line(new_line)
-      return
-    end
-  end
-end
-map("n", "<leader>tt", cycle_todo, { desc = "Cycle todo state" })
-map("n", "<leader>td", function()
-  local line = vim.api.nvim_get_current_line()
-  local new_line = line:gsub("%[.%]", "[d]", 1)
-  vim.api.nvim_set_current_line(new_line)
-end, { desc = "Mark deferred" })
-map("n", "<leader>tb", function()
-  local line = vim.api.nvim_get_current_line()
-  local new_line = line:gsub("%[.%]", "[b]", 1)
-  vim.api.nvim_set_current_line(new_line)
-end, { desc = "Mark blocked" })
-map("n", "<leader>t!", function()
-  local line = vim.api.nvim_get_current_line()
-  local new_line = line:gsub("%[.%]", "[!]", 1)
-  vim.api.nvim_set_current_line(new_line)
-end, { desc = "Mark priority" })
-map("n", "<leader>t?", function()
-  local line = vim.api.nvim_get_current_line()
-  local new_line = line:gsub("%[.%]", "[?]", 1)
-  vim.api.nvim_set_current_line(new_line)
-end, { desc = "Mark question" })
-
 -- === BETTER DEFAULTS ===
 map("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 map("v", "<", "<gv", { desc = "Indent left" })
@@ -106,11 +68,15 @@ map("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
 map("n", "n", "nzzzv", { desc = "Next match (centered)" })
 map("n", "N", "Nzzzv", { desc = "Prev match (centered)" })
 
+-- === TERMINAL ===
+map("n", "<C-`>", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
+map("t", "<C-`>", "<C-\\><C-n>:ToggleTerm<CR>", { desc = "Toggle terminal" })
+map("n", "<leader>tt", ":ToggleTerm<CR>", { desc = "Toggle terminal" })
+map("t", "<leader>tt", "<C-\\><C-n>:ToggleTerm<CR>", { desc = "Toggle terminal" })
 
+-- === TROUBLE ===
 map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (workspace)" })
 map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Diagnostics (buffer)" })
-map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", { desc = "Todos (workspace)" })
-map("n", "<leader>xT", "<cmd>Trouble todo toggle filter.buf=0<cr>", { desc = "Todos (buffer)" })
 map("n", "<leader>xs", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Symbols" })
 map("n", "<leader>xl", "<cmd>Trouble loclist toggle<cr>", { desc = "Location list" })
 map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix list" })
@@ -120,7 +86,6 @@ map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix list
 map("n", "<leader>a", "", { desc = "+ai" })
 map("n", "<leader>f", "", { desc = "+find" })
 map("n", "<leader>g", "", { desc = "+git" })
-map("n", "<leader>t", "", { desc = "+todo" })
 map("n", "<leader>x", "", { desc = "+trouble" })
 map("n", "<leader>D", "", { desc = "+distant" })
 

@@ -218,26 +218,6 @@ return {
     end,
   },
 
-  -- Todo comments highlighting
-  {
-    "folke/todo-comments.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("todo-comments").setup({
-        signs = true,
-        keywords = {
-          FIX = { icon = " ", color = "error" },
-          TODO = { icon = " ", color = "info" },
-          HACK = { icon = " ", color = "warning" },
-          WARN = { icon = " ", color = "warning" },
-          PERF = { icon = " ", color = "default" },
-          NOTE = { icon = " ", color = "hint" },
-        },
-      })
-    end,
-  },
-
   -- Color previews
   {
     "norcalli/nvim-colorizer.lua",
