@@ -1,53 +1,29 @@
--- AI Integration (Claude-focused)
+-- AI Integration
 return {
-  -- Codecompanion: AI chat interface
+  -- Opencode: AI assistant integration
   {
-    "olimorris/codecompanion.nvim",
+    "NickvanDyke/opencode.nvim",
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-telescope/telescope.nvim",
+      { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
     },
-    cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
     keys = {
-      { "<leader>ai", "<cmd>CodeCompanionChat Toggle<cr>", desc = "AI Chat" },
-      { "<leader>aa", "<cmd>CodeCompanionActions<cr>", desc = "AI Actions" },
-      { "<leader>ac", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to AI Chat" },
+      { "<leader>aa", function() require("opencode").ask("@this: ", { submit = true }) end, mode = { "n", "x" }, desc = "Ask opencode" },
+      { "<leader>as", function() require("opencode").select() end, mode = { "n", "x" }, desc = "Opencode select action" },
+      { "<leader>at", function() require("opencode").toggle() end, mode = { "n", "t" }, desc = "Toggle opencode terminal" },
     },
-    opts = {
-      strategies = {
-        chat = {
-          adapter = "anthropic",
-        },
-        inline = {
-          adapter = "anthropic",
-        },
-        agent = {
-          adapter = "anthropic",
-        },
-      },
-      adapters = {
-        anthropic = function()
-          return require("codecompanion.adapters").extend("anthropic", {
-            schema = {
-              model = {
-                default = "claude-sonnet-4-20250514",
-              },
-            },
-          })
-        end,
-      },
-      display = {
-        diff = {
-          provider = "mini_diff",
-        },
-        chat = {
-          window = {
-            layout = "vertical",
-            width = 0.3,
-          },
-        },
-      },
-    },
+    config = function()
+      ---@type opencode.Opts
+      vim.g.opencode_opts = {
+        provider = {
+          enabled = "snacks",
+          tmux = {
+            -- ...
+          }
+        }
+      }
+
+      -- Required for auto-reload
+      vim.o.autoread = true
+    end,
   },
 }

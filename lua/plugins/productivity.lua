@@ -94,8 +94,10 @@ return {
       dashboard = { enabled = false },
       -- Indent guides (we use indent-blankline)
       indent = { enabled = false },
-      -- Input (we use dressing)
-      input = { enabled = false },
+      -- Input (needed for opencode.nvim)
+      input = { enabled = true },
+      -- Picker (needed for opencode.nvim)
+      picker = { enabled = true },
       -- Notifier (we use nvim-notify)
       notifier = { enabled = false },
       -- Quick file access

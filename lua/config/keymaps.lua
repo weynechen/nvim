@@ -117,6 +117,7 @@ map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix list
 
 -- === WHICH-KEY GROUPS ===
 -- These will show up nicely in which-key
+map("n", "<leader>a", "", { desc = "+ai" })
 map("n", "<leader>f", "", { desc = "+find" })
 map("n", "<leader>g", "", { desc = "+git" })
 map("n", "<leader>t", "", { desc = "+todo" })
