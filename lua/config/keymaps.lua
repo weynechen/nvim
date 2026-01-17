@@ -91,4 +91,5 @@ map("n", "<leader>D", "", { desc = "+distant" })
 
 -- neotree bind
 -- map("n", "<C-b>", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
-map("n", "<leader>e", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
+map("n", "<leader>e", ":Neotree reveal<CR>", { desc = "Toggle sidebar" })
+map("n", "|", ":Neotree toggle dir=.<CR>", { desc = "Toggle sidebar" })
