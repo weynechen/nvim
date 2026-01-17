@@ -6,7 +6,7 @@ map("n", "<C-s>", ":w<CR>", { desc = "Save file" })
 map("i", "<C-s>", "<Esc>:w<CR>a", { desc = "Save file" })
 map("n", "<C-q>", ":q<CR>", { desc = "Quit" })
 map("n", "<C-n>", ":enew<CR>", { desc = "New file" })
-map("n", "<C-w>", ":bdelete<CR>", { desc = "Close buffer", silent = true })
+-- map("n", "<C-w>", ":bdelete<CR>", { desc = "Close buffer", silent = true })
 
 -- === NAVIGATION (Ctrl+) ===
 map("n", "<C-p>", ":Telescope find_files<CR>", { desc = "Quick open file" })
