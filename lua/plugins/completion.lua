@@ -18,7 +18,27 @@ return {
       local luasnip = require("luasnip")
       local lspkind = require("lspkind")
 
+      -- Load snippets from friendly-snippets
       require("luasnip.loaders.from_vscode").lazy_load()
+
+      -- Configure LuaSnip behavior
+      luasnip.config.set_config({
+        history = true,              -- Keep last snippet for jumping back
+        updateevents = "TextChanged,TextChangedI", -- Update snippets as you type
+        enable_autosnippets = true,
+        ext_opts = {
+          [require("luasnip.util.types").choiceNode] = {
+            active = {
+              virt_text = { { "●", "GruvboxOrange" } },
+            },
+          },
+        },
+      })
+
+      -- Prevent C files from loading C++ snippets
+      luasnip.filetype_extend("c", {})  -- C only loads 'c' snippets, not 'cpp'
+      -- If you want C++ to also have C snippets, keep the default behavior
+      -- luasnip.filetype_extend("cpp", { "c" })  -- C++ can use both cpp and c snippets
 
       cmp.setup({
         snippet = {
@@ -39,29 +59,40 @@ return {
           ["<C-e>"] = cmp.mapping.abort(),
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
           ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
+            -- Priority 1: If in snippet, jump to next placeholder
+            if luasnip.locally_jumpable(1) then
+              luasnip.jump(1)
+            -- Priority 2: If completion menu visible, select next item
+            elseif cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
+            -- Priority 3: If snippet can be expanded, expand it
+            elseif luasnip.expandable() then
+              luasnip.expand()
+            -- Priority 4: Insert tab/spaces
             else
-              fallback()
+              local keys = vim.api.nvim_replace_termcodes("<Tab>", true, false, true)
+              vim.api.nvim_feedkeys(keys, "n", false)
             end
           end, { "i", "s" }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
+            -- Priority 1: If in snippet, jump to previous placeholder
+            if luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)
+            -- Priority 2: If completion menu visible, select previous item
+            elseif cmp.visible() then
+              cmp.select_prev_item()
+            -- Priority 3: Decrease indentation
             else
-              fallback()
+              local keys = vim.api.nvim_replace_termcodes("<C-d>", true, false, true)
+              vim.api.nvim_feedkeys(keys, "n", false)
             end
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
+          { name = "nvim_lsp", priority = 1000 },  -- LSP highest priority
+          { name = "luasnip", priority = 750 },    -- Snippets second
+          { name = "buffer", priority = 500 },     -- Buffer text third
+          { name = "path", priority = 250 },       -- Path completion last
         }),
         formatting = {
           format = lspkind.cmp_format({
@@ -89,6 +120,20 @@ return {
         mapping = cmp.mapping.preset.cmdline(),
         sources = { { name = "buffer" } },
       })
+
+      -- Optional: Completely disable snippets for C files (uncomment if needed)
+      -- vim.api.nvim_create_autocmd("FileType", {
+      --   pattern = "c",
+      --   callback = function()
+      --     cmp.setup.buffer({
+      --       sources = cmp.config.sources({
+      --         { name = "nvim_lsp" },
+      --         { name = "buffer" },
+      --         { name = "path" },
+      --       }),
+      --     })
+      --   end,
+      -- })
     end,
   },
 
